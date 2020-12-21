@@ -18,22 +18,25 @@ def repo_name():
 
 
 def get_env(
+    # environment
     github_env,
     repo_name,
+    # user configuration
     image_path,
     on_master=None,
     tag_pattern=None,
     restrict_to=None,
     latest_on_tag=False,
-    on_main=False,
-    tag=None,
+    # event config
+    is_on_main_branch=False,
+    is_tag=None,
 ):
-    if on_main:
+    if is_on_main_branch:
         ref = "refs/heads/main"
     else:
         ref = "refs/heads/abranch"
-    if tag:
-        ref = f"refs/tags/{tag}"
+    if is_tag:
+        ref = f"refs/tags/{is_tag}"
     return {
         "GITHUB_EVENT_NAME": "push",
         "GITHUB_REPOSITORY": repo_name,
@@ -73,7 +76,7 @@ def test_dnscache_main(github_env, repo_name):
             on_master="latest",
             tag_pattern="dnscache-v*",
             restrict_to="openzim/zimfarm",
-            on_main=True,
+            is_on_main_branch=True,
         )
     )
     assert len(res) == 2
@@ -89,8 +92,8 @@ def test_dnscache_tag(github_env, repo_name):
             on_master="latest",
             tag_pattern="dnscache-v*",
             restrict_to="openzim/zimfarm",
-            on_main=True,
-            tag="dnscache-v1.1",
+            is_on_main_branch=True,
+            is_tag="dnscache-v1.1",
         )
     )
     assert len(res) == 2
@@ -106,8 +109,8 @@ def test_dnscache_tag_and_latest(github_env, repo_name):
             on_master="latest",
             tag_pattern="dnscache-v*",
             restrict_to="openzim/zimfarm",
-            on_main=True,
-            tag="dnscache-v1.1",
+            is_on_main_branch=True,
+            is_tag="dnscache-v1.1",
             latest_on_tag=True,
         )
     )
@@ -125,13 +128,13 @@ def test_restrict_to(github_env):
             on_master="latest",
             tag_pattern="dnscache-v*",
             restrict_to="openzim/zimfarm",
-            on_main=True,
+            is_on_main_branch=True,
         )
     )
     assert len(res) == 0
 
 
-def test_not_on_main(github_env, repo_name):
+def test_not_is_on_main_branch(github_env, repo_name):
     res = launch_and_retrieve(
         **get_env(
             github_env=github_env,
@@ -139,7 +142,7 @@ def test_not_on_main(github_env, repo_name):
             image_path="owner/image",
             on_master="latest",
             tag_pattern="dnscache-v*",
-            on_main=False,
+            is_on_main_branch=False,
         )
     )
     assert len(res) == 0
@@ -153,8 +156,8 @@ def test_tag(github_env, repo_name):
             image_path="owner/image",
             on_master="latest",
             tag_pattern="v*",
-            on_main=False,
-            tag="v1.2",
+            is_on_main_branch=False,
+            is_tag="v1.2",
         )
     )
     assert len(res) == 2
@@ -169,7 +172,7 @@ def test_zimit_main(github_env, repo_name):
             on_master="dev",
             tag_pattern="v*",
             restrict_to="openzim/zimit",
-            on_main=True,
+            is_on_main_branch=True,
         )
     )
     assert len(res) == 2
@@ -186,8 +189,8 @@ def test_zimit_tag(github_env, repo_name):
             on_master="dev",
             tag_pattern="v*",
             restrict_to="openzim/zimit",
-            on_main=True,
-            tag="v1.1",
+            is_on_main_branch=True,
+            is_tag="v1.1",
             latest_on_tag=True,
         )
     )
@@ -196,3 +199,16 @@ def test_zimit_tag(github_env, repo_name):
     assert "ghcr.io/openzim/zimit:1.1" in res
     assert "openzim/zimit:latest" in res
     assert "ghcr.io/openzim/zimit:latest" in res
+
+
+def test_no_tag_on_master(github_env, repo_name):
+    res = launch_and_retrieve(
+        **get_env(
+            github_env=github_env,
+            repo_name=repo_name,
+            image_path="openzim/test",
+            tag_pattern="v*",
+            is_on_main_branch=True,
+        )
+    )
+    assert len(res) == 0
