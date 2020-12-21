@@ -17,5 +17,5 @@ jobs:
     - name: Black
       run: black -c compute_tags.py
     - name: Tests
-      run: pytest tests.y
+      run: pytest tests.py
 
