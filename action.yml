@@ -41,9 +41,9 @@ runs:
         TAGS: ${{ inputs.tags }}
         DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
 
-    - name: Verify image tags
-      run: echo IMAGE_TAGS $IMAGE_TAGS
-      shell: bash
+    # - name: Verify image tags
+    #   run: echo IMAGE_TAGS $IMAGE_TAGS
+    #   shell: bash
 
     - name: Checkout Code
       if: inputs.context == '.'
