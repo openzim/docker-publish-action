@@ -53,13 +53,13 @@ runs:
       if: inputs.context != '.'
       uses: actions/checkout@v2.3.4
       with:
-          path: __repository
+        path: __repository
 
     - name: move context
       if: inputs.context != '.'
       run: |
-          mv __repository/${{ inputs.context }}/* .
-          rm -rf __repository
+        mv __repository/${{ inputs.context }}/* .
+        rm -rf __repository
       shell: bash
 
     - name: Setup BuildX
