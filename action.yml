@@ -21,10 +21,19 @@ inputs:
   restrict-to:
     description: repository path to limit this action to (ex. 'openzim/zimfarm') to prevent forks from triggering it.
     required: false
-  checkout:
-    description: whether to checkout repository or not (true or false)
-    required: false
-    default: false
+  hub-username:
+    description: Docker Hub username to push image
+    required: true
+  hub-password:
+    description: Docker Hub password to push image
+    required: true
+  ghcr-username:
+    description: GHCR username to push image
+    required: true
+  ghcr-token:
+    description: GHCR token to push image
+    required: true
+
 runs:
   using: composite
   steps:
@@ -61,7 +70,7 @@ runs:
       env:
         CONTEXT: ${{ inputs.context }}
         DOCKERFILE: ${{ inputs.dockerfile }}
-        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-        GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
-        GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+        DOCKERHUB_USERNAME: ${{ inputs.hub-username }}
+        DOCKERHUB_PASSWORD: ${{ inputs.hub-password }}
+        GHCR_USERNAME: ${{ inputs.ghcr-username }}
+        GHCR_TOKEN: ${{ inputs.ghcr-token }}
