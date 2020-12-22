@@ -26,7 +26,7 @@ hub_login = subprocess.run(
         "--password-stdin",
     ],
     input=os.getenv("DOCKERHUB_PASSWORD", "").strip() + "\n",
-    text=True,
+    universal_newlines=True,
 )
 if hub_login.returncode != 0:
     print(f"Unable to login to Docker Hub: {hub_login.returncode}")
@@ -46,7 +46,7 @@ ghcr_login = subprocess.run(
         "ghcr.io",
     ],
     input=os.getenv("GHCR_TOKEN", "").strip() + "\n",
-    text=True,
+    universal_newlines=True,
 )
 if ghcr_login.returncode != 0:
     print(f"Unable to login to GHCR: {ghcr_login.returncode}")
