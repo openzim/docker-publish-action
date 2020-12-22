@@ -13,7 +13,7 @@ if not tags:
     sys.exit(0)
 
 context = os.getenv("CONTEXT", ".")
-dockerfile = os.getenv("DOCKERFILE", "./Dockerfile")
+dockerfile = os.path.join(context, os.getenv("DOCKERFILE", "Dockerfile"))
 
 # login to dockerhub
 print("Logging into Docker hub…")
