@@ -4,6 +4,8 @@ import os
 import re
 import sys
 
+perl_re = re.compile(r"^/(.+)/$")
+
 if os.getenv("RESTRICT_TO") and os.getenv("GITHUB_REPOSITORY") != os.getenv(
     "RESTRICT_TO"
 ):
@@ -22,10 +24,18 @@ image_path = os.getenv("IMAGE_PATH")
 ref = os.getenv("GITHUB_REF").split("/", 2)[-1]
 is_tag = os.getenv("GITHUB_REF").startswith("refs/tags/")
 if is_tag:
-    exp = os.getenv("TAG_PATTERN", "").replace("*", "(.+)")
+    exp = os.getenv("TAG_PATTERN", "")
+    # convert from perl syntax (/pattern/) to python one
+    if perl_re.match(exp):
+        exp = perl_re.match(exp).groups()[-1]
     res = re.match(exp, ref)
     if res:
-        version_tags.append(res.groups()[0])
+        if res.groups():
+            # we have a matching tag with a group, use the group part
+            version_tags.append(res.groups()[0])
+        else:
+            # we have a matching tag without a group, use git tag
+            version_tags.append(ref)
 
         if os.getenv("LATEST_ON_TAG", "").lower() == "true":
             version_tags.append("latest")

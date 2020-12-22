@@ -74,7 +74,7 @@ def test_dnscache_main(github_env, repo_name):
             repo_name="openzim/zimfarm",
             image_path="openzim/dnscache",
             on_master="latest",
-            tag_pattern="dnscache-v*",
+            tag_pattern="/^dnscache-v([0-9.]+)$/",
             restrict_to="openzim/zimfarm",
             is_on_main_branch=True,
         )
@@ -90,7 +90,7 @@ def test_dnscache_tag(github_env, repo_name):
             repo_name="openzim/zimfarm",
             image_path="openzim/dnscache",
             on_master="latest",
-            tag_pattern="dnscache-v*",
+            tag_pattern="/^dnscache-v([0-9.]+)$/",
             restrict_to="openzim/zimfarm",
             is_on_main_branch=True,
             is_tag="dnscache-v1.1",
@@ -107,7 +107,7 @@ def test_dnscache_tag_and_latest(github_env, repo_name):
             repo_name="openzim/zimfarm",
             image_path="openzim/dnscache",
             on_master="latest",
-            tag_pattern="dnscache-v*",
+            tag_pattern="/^dnscache-v([0-9.]+)$/",
             restrict_to="openzim/zimfarm",
             is_on_main_branch=True,
             is_tag="dnscache-v1.1",
@@ -126,7 +126,7 @@ def test_restrict_to(github_env):
             repo_name="rgaudin/test",
             image_path="openzim/dnscache",
             on_master="latest",
-            tag_pattern="dnscache-v*",
+            tag_pattern="/^dnscache-v([0-9.]+)$/",
             restrict_to="openzim/zimfarm",
             is_on_main_branch=True,
         )
@@ -141,7 +141,7 @@ def test_not_is_on_main_branch(github_env, repo_name):
             repo_name=repo_name,
             image_path="owner/image",
             on_master="latest",
-            tag_pattern="dnscache-v*",
+            tag_pattern="/^dnscache-v([0-9.]+)$/",
             is_on_main_branch=False,
         )
     )
@@ -170,7 +170,7 @@ def test_zimit_main(github_env, repo_name):
             repo_name="openzim/zimit",
             image_path="openzim/zimit",
             on_master="dev",
-            tag_pattern="v*",
+            tag_pattern="v([0-9.]+)",
             restrict_to="openzim/zimit",
             is_on_main_branch=True,
         )
@@ -187,7 +187,7 @@ def test_zimit_tag(github_env, repo_name):
             repo_name="openzim/zimit",
             image_path="openzim/zimit",
             on_master="dev",
-            tag_pattern="v*",
+            tag_pattern="v([0-9.]+)",
             restrict_to="openzim/zimit",
             is_on_main_branch=True,
             is_tag="v1.1",
@@ -212,3 +212,41 @@ def test_no_tag_on_master(github_env, repo_name):
         )
     )
     assert len(res) == 0
+
+
+@pytest.mark.parametrize(
+        "tag_pattern, tag, expected",
+        [
+            # no group
+            ("v.+", "v1", "v1"),
+            ("v.+", "v1.1", "v1.1"),
+            # group
+            ("v([0-9.]+)", "v1", "1"),
+            ("v([0-9.]+)", "v1.1", "1.1"),
+            # caret for start
+            ("^v([0-9.]+)", "v1", "1"),
+            ("^v([0-9.]+)", "v1.1", "1.1"),
+            # dollar for end
+            ("^v([0-9.]+)$", "v1", "1"),
+            ("^v([0-9.]+)$", "v1.1", "1.1"),
+            # perl syntax
+            ("/v([0-9.]+)/", "v1", "1"),
+            ("/v([0-9.]+)/", "v1.1", "1.1"),
+            # perl with caret and dollar
+            ("/^v([0-9.]+)$/", "v1", "1"),
+            ("/^v([0-9.]+)$/", "v1.1", "1.1"),
+        ],
+    )
+def test_tag_patterns(github_env, repo_name, tag_pattern, tag, expected):
+    res = launch_and_retrieve(
+        **get_env(
+            github_env=github_env,
+            repo_name=repo_name,
+            image_path=repo_name,
+            tag_pattern=tag_pattern,
+            is_tag=tag,
+        )
+    )
+    assert len(res) == 2
+    assert f"{repo_name}:{expected}" in res
+    assert f"ghcr.io/{repo_name}:{expected}" in res

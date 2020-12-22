@@ -1,5 +1,10 @@
-name: Openzim Docker Action
-description: Build and publish Docker Images
+name: Openzim Docker Publish Action
+description: Build and publish Docker Images to both Docker Hub and ghcr.
+author: openzim
+branding:
+  icon: package
+  color: green
+
 inputs:
   image-path:
     description: target image path on both registries (ex. 'openzim/dnscache')
