@@ -8,7 +8,7 @@ if os.getenv("RESTRICT_TO") and os.getenv("GITHUB_REPOSITORY") != os.getenv(
     "RESTRICT_TO"
 ):
     print("not triggered on restricted-to repo, skipping.", os.getenv("RESTRICT_TO"))
-    sys.exit(0)
+    sys.exit(1)
 
 if os.getenv("GITHUB_EVENT_NAME") != "push":
     print("not push event, skipping.", os.getenv("GITHUB_EVENT_NAME"))
