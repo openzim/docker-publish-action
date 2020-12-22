@@ -1,6 +1,7 @@
 # docker-publish-action
 
 [![GitHub release](https://img.shields.io/github/release/openzim/docker-publish-action.svg)](https://github.com/openzim/docker-publish-action/releases/latest)
+[![GitHub marketplace](https://img.shields.io/badge/marketplace-docker--publish--action-blue?logo=github)](https://github.com/marketplace/actions/openzim-docker-publish-action)
 [![CI workflow](https://img.shields.io/github/workflow/status/openzim/docker-publish-action/CI?label=CI&logo=github)](https://github.com/openzim/docker-publish-action/actions?workflow=CI)
 
 A Github Action to automatically build and publish Openzim's images to **Both Docker Hub and Github Container Regisry**.
