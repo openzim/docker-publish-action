@@ -58,7 +58,7 @@ runs:
         tags = [t for t in os.getenv("IMAGE_TAGS", "").strip().split(",") if t]
         if not tags:
             print("No expected tag to push to.")
-        else"
+        else:
           print("We'll build for and push to:")
           for tag in tags:
             print("-", tag)
