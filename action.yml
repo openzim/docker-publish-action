@@ -41,7 +41,7 @@ runs:
       shell: bash
 
     - name: Compute Image Tags
-      run: python3 $GITHUB_ACTION_PATH/compute_tags.py
+      run: python3.8 $GITHUB_ACTION_PATH/compute_tags.py
       shell: bash
       env:
         IMAGE_PATH: ${{ inputs.image-path }}
@@ -61,11 +61,11 @@ runs:
         else:
           print("We'll build for and push to:")
           for tag in tags:
-            print("-", tag)
+            print("- {}".format(tag))
       shell: python
 
     - name: Build and Push
-      run: python3 $GITHUB_ACTION_PATH/build_push.py
+      run: python3.8 $GITHUB_ACTION_PATH/build_push.py
       shell: bash
       env:
         CONTEXT: ${{ inputs.context }}

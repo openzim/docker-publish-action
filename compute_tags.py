@@ -14,6 +14,8 @@ if os.getenv("GITHUB_EVENT_NAME") != "push":
     print("not push event, skipping.", os.getenv("GITHUB_EVENT_NAME"))
     sys.exit(0)
 
+print("Computing Image Tags…")
+
 version_tags = []
 image_path = os.getenv("IMAGE_PATH")
 
