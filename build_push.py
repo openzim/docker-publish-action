@@ -16,7 +16,7 @@ context = os.getenv("CONTEXT", ".")
 dockerfile = os.getenv("DOCKERFILE", "./Dockerfile")
 
 # login to dockerhub
-print("🔑 Logging into Docker hub…")
+print("Logging into Docker hub…")
 hub_login = subprocess.run(
     [
         "docker",
@@ -35,7 +35,7 @@ if hub_login.returncode != 0:
 print("Successfuly logged in to Hub!")
 
 # login to ghcr.io
-print("🔑 Logging into ghcr.io…")
+print("Logging into ghcr.io…")
 ghcr_login = subprocess.run(
     [
         "docker",
