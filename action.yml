@@ -7,11 +7,11 @@ inputs:
   context:
     description: folder to use as context for the build (ex. '.' or 'dnscache')
     required: false
-    default: '.'
+    default: .
   dockerfile:
     description: Dockerfile path (relative to repo root) if not './Dockerfile'
     required: false
-    default: './Dockerfile'
+    default: ./Dockerfile
   on-master:
     description: tag to use on master commits. (ex. 'latest' or 'dev') Leave out if not wanted
     required: false
