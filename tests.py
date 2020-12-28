@@ -250,3 +250,15 @@ def test_tag_patterns(github_env, repo_name, tag_pattern, tag, expected):
     assert len(res) == 2
     assert f"{repo_name}:{expected}" in res
     assert f"ghcr.io/{repo_name}:{expected}" in res
+
+
+def test_tag_without_tag_pattern(github_env, repo_name):
+    res = launch_and_retrieve(
+        **get_env(
+            github_env=github_env,
+            repo_name=repo_name,
+            image_path="openzim/zimfarm-task-worker",
+            is_tag="uploader-v1.1.1",
+        )
+    )
+    assert len(res) == 0

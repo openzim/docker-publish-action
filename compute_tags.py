@@ -23,8 +23,8 @@ image_path = os.getenv("IMAGE_PATH")
 
 ref = os.getenv("GITHUB_REF").split("/", 2)[-1]
 is_tag = os.getenv("GITHUB_REF").startswith("refs/tags/")
-if is_tag:
-    exp = os.getenv("TAG_PATTERN", "")
+exp = os.getenv("TAG_PATTERN", "")
+if is_tag and exp:
     # convert from perl syntax (/pattern/) to python one
     if perl_re.match(exp):
         exp = perl_re.match(exp).groups()[-1]
