@@ -51,18 +51,22 @@ def get_env(
     }
 
 
-def extract_result(fpath):
+def extract_result(fpath, name):
     with open(fpath, "r") as fh:
-        return [a for a in fh.read().strip().split("=", 1)[-1].split(",") if a.strip()]
+        for line in fh.readlines():
+            if line.startswith(name + "="):
+                tags = line.strip().split("=", 1)[-1]
+                return tags.split(",") if tags else []
+    return []
 
 
-def launch_and_retrieve(**kwargs):
+def launch_and_retrieve(name="IMAGE_TAGS", **kwargs):
     import pprint
 
     pprint.pprint(kwargs)
     subprocess.run([sys.executable, "./compute_tags.py"], env=kwargs)
     try:
-        return extract_result(kwargs.get("GITHUB_ENV", "-"))
+        return extract_result(kwargs.get("GITHUB_ENV", "-"), name)
     except Exception:
         return []
 

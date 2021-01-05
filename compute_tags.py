@@ -52,4 +52,6 @@ for t in set(version_tags):
 
 # write image_tags to env so it's available to future steps
 with open(os.getenv("GITHUB_ENV"), "a") as fh:
+    fh.write("VERSION_TAGS={}\n".format(",".join(version_tags)))
     fh.write("IMAGE_TAGS={}\n".format(",".join(image_tags)))
+    fh.write("IMAGE_PATH={}\n".format(image_path))

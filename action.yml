@@ -42,12 +42,26 @@ inputs:
   ghcr-token:
     description: GHCR token to push image
     required: true
+  build-args:
+    description: optional key/value pairs to pass as build arguments. {version} replaced with found version/latest (if any)
+    required: false
 
 runs:
   using: composite
   steps:
     - run: echo "IMAGE_TAGS=" >> $GITHUB_ENV
       shell: bash
+
+    - name: save build-args to env
+      run: |
+        import os
+        import json
+        build_args = dict([item.split("=") if "=" in item else (item, "") for item in os.getenv("BUILD_ARGS", "").split()])
+        with open(os.getenv("GITHUB_ENV"), "a") as fh:
+          fh.write("BUILD_ARGS={}\n".format(json.dumps(build_args)))
+      shell: python
+      env:
+        BUILD_ARGS: ${{ inputs.build-args }}
 
     - name: Compute Image Tags
       run: python3 $GITHUB_ACTION_PATH/compute_tags.py
