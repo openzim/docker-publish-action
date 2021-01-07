@@ -6,8 +6,15 @@ branding:
   color: green
 
 inputs:
-  image-path:
+  image-name:
     description: target image path on both registries (ex. 'openzim/dnscache')
+    required: true
+  registries:
+    description: list of registries to push to (defaults to docker.io ghcr.io)
+    required: false
+    default: docker.io ghcr.io
+  credentials:
+    description: list of credentials for each registry. Ex. DOCKERIO_USERNAME=xxx DOCKERIO_TOKEN=yyy GHCRIO_USERNAME=xxx
     required: true
   context:
     description: folder to use as context for the build (ex. '.' or 'dnscache')
@@ -17,6 +24,13 @@ inputs:
     description: Dockerfile path (relative to context) if not 'Dockerfile'
     required: false
     default: Dockerfile
+  build-args:
+    description: optional key/value pairs to pass as build arguments. {version} replaced with found version/latest (if any)
+    required: false
+  platforms:
+    description: specify platform to build for (one of linux/amd64, linux/arm64, linux/riscv64, linux/ppc64le, linux/s390x, linux/386, linux/arm/v7, linux/arm/v6, etc)
+    required: false
+    default: linux/amd64
   on-master:
     description: tag to use on master commits. (ex. 'latest' or 'dev') Leave out if not wanted
     required: false
@@ -30,70 +44,50 @@ inputs:
   restrict-to:
     description: repository path to limit this action to (ex. 'openzim/zimfarm') to prevent forks from triggering it.
     required: false
-  hub-username:
-    description: Docker Hub username to push image
-    required: true
-  hub-password:
-    description: Docker Hub password to push image
-    required: true
-  ghcr-username:
-    description: GHCR username to push image
-    required: true
-  ghcr-token:
-    description: GHCR token to push image
-    required: true
-  build-args:
-    description: optional key/value pairs to pass as build arguments. {version} replaced with found version/latest (if any)
-    required: false
 
 runs:
   using: composite
   steps:
-    - run: echo "IMAGE_TAGS=" >> $GITHUB_ENV
-      shell: bash
-
-    - name: save build-args to env
-      run: |
-        import os
-        import json
-        build_args = dict([item.split("=") if "=" in item else (item, "") for item in os.getenv("BUILD_ARGS", "").split()])
-        with open(os.getenv("GITHUB_ENV"), "a") as fh:
-          fh.write("BUILD_ARGS={}\n".format(json.dumps(build_args)))
-      shell: python
-      env:
-        BUILD_ARGS: ${{ inputs.build-args }}
-
-    - name: Compute Image Tags
-      run: python3 $GITHUB_ACTION_PATH/compute_tags.py
+    - name: check and store params
+      run: python3 $GITHUB_ACTION_PATH/check_inputs.py
       shell: bash
       env:
-        IMAGE_PATH: ${{ inputs.image-path }}
+        IMAGE_NAME: ${{ inputs.image-name }}
+        REGISTRIES: ${{ inputs.registries }}
+        CREDENTIALS: ${{ inputs.credentials }}
         CONTEXT: ${{ inputs.context }}
+        DOCKERFILE: ${{ inputs.dockerfile }}
+        BUILD_ARGS: ${{ inputs.build-args }}
+        PLATFORMS: ${{ inputs.platforms }}
         ON_MASTER: ${{ inputs.on-master }}
         TAG_PATTERN: ${{ inputs.tag-pattern }}
         LATEST_ON_TAG: ${{ inputs.latest-on-tag }}
         RESTRICT_TO: ${{ inputs.restrict-to }}
         DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        DOCKER_BUILDX_VERSION: 0.5.1
 
-    - name: Verify Image tags
-      run: |
-        import os
-        tags = [t for t in os.getenv("IMAGE_TAGS", "").strip().split(",") if t]
-        if not tags:
-            print("No expected tag to push to.")
-        else:
-          print("We'll build for and push to:")
-          for tag in tags:
-            print("- {}".format(tag))
-      shell: python
+    - name: find tag
+      run: python3 $GITHUB_ACTION_PATH/find_tag.py
+      shell: bash
 
-    - name: Build and Push
-      run: python3 $GITHUB_ACTION_PATH/build_push.py
+    - name: Display found tag
+      run: python3 $GITHUB_ACTION_PATH/display_tag.py
+      shell: bash
+
+    - name: docker install
+      run: python3 $GITHUB_ACTION_PATH/docker_install.py
+      shell: bash
+
+    - name: docker login
+      run: python3 $GITHUB_ACTION_PATH/docker_login.py
       shell: bash
       env:
-        CONTEXT: ${{ inputs.context }}
-        DOCKERFILE: ${{ inputs.dockerfile }}
-        DOCKERHUB_USERNAME: ${{ inputs.hub-username }}
-        DOCKERHUB_PASSWORD: ${{ inputs.hub-password }}
-        GHCR_USERNAME: ${{ inputs.ghcr-username }}
-        GHCR_TOKEN: ${{ inputs.ghcr-token }}
+        CREDENTIALS: ${{ inputs.credentials }}
+
+    - name: docker build-push
+      run: python3 $GITHUB_ACTION_PATH/docker_build.py
+      shell: bash
+
+    - name: docker logout
+      run: python3 $GITHUB_ACTION_PATH/docker_logout.py
+      shell: bash
