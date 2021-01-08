@@ -29,6 +29,7 @@ def get_env(
     # event config
     is_on_main_branch=False,
     is_tag=None,
+    manual_tag="",
 ):
     if is_on_main_branch:
         ref = "refs/heads/main"
@@ -46,6 +47,7 @@ def get_env(
         "ON_MASTER": on_master or "",
         "TAG_PATTERN": tag_pattern or "",
         "LATEST_ON_TAG": "true" if latest_on_tag else "false",
+        "MANUAL_TAG": manual_tag,
     }
 
 
@@ -245,3 +247,32 @@ def test_tag_without_tag_pattern(github_env, repo_name):
     )
     assert not tag
     assert not latest
+
+
+def test_manual_tag(github_env, repo_name):
+    tag, latest = launch_and_retrieve(
+        **get_env(
+            github_env=github_env,
+            repo_name=repo_name,
+            image_name="openzim/zimfarm-task-worker",
+            is_tag="uploader-v1.1.1",
+            manual_tag="toto",
+        )
+    )
+    assert tag == "toto"
+    assert not latest
+
+
+def test_manual_tag_latest(github_env, repo_name):
+    tag, latest = launch_and_retrieve(
+        **get_env(
+            github_env=github_env,
+            repo_name=repo_name,
+            image_name="openzim/zimfarm-task-worker",
+            is_tag="uploader-v1.1.1",
+            manual_tag="toto",
+            latest_on_tag=True,
+        )
+    )
+    assert tag == "toto"
+    assert latest

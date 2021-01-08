@@ -46,6 +46,12 @@ on:
       - master
     tags:
       - v*
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Specific version to build
+        required: false
+        default: ''
 
 jobs:
   build-and-push:
@@ -71,7 +77,8 @@ jobs:
           latest-on-tag: true
           restrict-to: openzim/zimit
           build-args:
-            VERSION={version}
+            VERSION={tag}
+          manual-tag: ${{ github.event.inputs.version }}
 ```
 
 **Note**: th top-part `on` is just a filter on running that workflow. You can omit it but it's safer to not run it on refs that you know won't trigger anything. See [documentation](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#on).
@@ -83,11 +90,12 @@ jobs:
 | `credentials`<font color=red>\*</font> | **List of credentials for all registries**<br />Use the `REGISTRY_USERNAME=xxx` and `REGISTRY_TOKEN=xxx` formats to specify.<br />`REGISTRY` refers to the uppercase registry domain name without `.`.<br />Ex: `GHCRIO_USERNAME=xxx` for `ghcr.io`.<br />_Notes_: Github token is a [PAT](https://github.com/settings/tokens) with `repo, workflow, write:packages` permissions.<br />Docker hub token is account password.|
 | `context` | **Path in the repository to use as build context**<br />Relative to repository root.  Ex: `dnscache` or `workers/slave`.<br />Defaults to `.`. |
 | `dockerfile` | **Path to the Dockerfile recipe, relative to context**<br />Use `../` syntax if dockerfile is outside context.<br />Defaults to `Dockerfile`. |
-| `build-args` | **Arguments for `docker build --build-arg`**<br />Special value `{version}` will be replaced with the tag to set.<br />Use the `name=value` format and separate each by a space or new line.|
+| `build-args` | **Arguments for `docker build --build-arg`**<br />Special value `{tag}` will be replaced with the tag to set.<br />Use the `name=value` format and separate each by a space or new line.|
 | `platforms` | **List of platforms to build-for**.<br />Ex.: `linux/armv/v7 linux/amd64`.<br />Defaults to `linux/amd64`. |
 | `on-master` | **Tag to apply for every commit on default branch**.<br />Omit it if you don't want to push an image for non-tagged commits.<br />Only applies to commits on your default branch (`master` or `main`) |
 | `tag-pattern` | **Regular expression to match tags with**.<br />Only git tags matching this regexp will trigger a build+push to the corresponding docker tag.<br />If not specifying a group, whole git tag is used as is on docker. |
-| `latest-on-tag` | **Whether to push to docker tag `:latest` on every matched tag** (see `tag-pattern`)<br />Value must be `true` or `false`. Defaults to `false`. |
+| `latest-on-tag` | **Whether to push to docker tag `:latest` on every matched tag** (see `tag-pattern`)<br />Also applies to `manual-tag`.<br />Value must be `true` or `false`. Defaults to `false`. |
+| `manual-tag` | **Manual tag override**<br />Replaces `on-master` and `tag-pattern` if not empty.<br />Also triggers `:latest` if `latest-on-tag` is `true`. |
 | `restrict-to` | **Don't push if action is run for a different repository**<br />Specify as `{owner}/{repository}`. |
 
 
