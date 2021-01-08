@@ -1,3 +1,8 @@
+# v5
+
+- now supports a manual tag override through `manual-tag`.
+- special `build-arg` value `{version}` replaced with `{tag}`.
+
 # v4
 
 - added support for any registries (still defaults to docker.io + ghcr.io)

@@ -23,6 +23,7 @@ def main():
         "ON_MASTER",
         "BUILD_ARGS",
         "TAG_PATTERN",
+        "MANUAL_TAG",
         "RESTRICT_TO",
         "DOCKER_BUILDX_VERSION",
     ]

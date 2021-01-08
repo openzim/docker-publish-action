@@ -10,14 +10,19 @@ import re
 def find_tag_from_env():
 
     docker_tag_for_master = os.getenv("ON_MASTER")
+    manual_tag = os.getenv("MANUAL_TAG", "")
     version_tag, latest = "", False
 
     ref = os.getenv("GITHUB_REF").split("/", 2)[-1]
     is_tag = os.getenv("GITHUB_REF").startswith("refs/tags/")
     tag_regexp = os.getenv("TAG_PATTERN", "")
 
+    # manual override tag is set
+    if manual_tag:
+        version_tag = manual_tag
+        latest = os.getenv("LATEST_ON_TAG", "").lower() == "true"
     # this is a commit on tag
-    if is_tag and tag_regexp:
+    elif is_tag and tag_regexp:
         # convert from perl syntax (/pattern/) to python one
         perl_re = re.compile(r"^/(.+)/$")
         if perl_re.match(tag_regexp):

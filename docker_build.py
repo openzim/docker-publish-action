@@ -30,7 +30,7 @@ def build_and_push_from_env():
 
     if build_args:
         for arg, value in build_args.items():
-            if value == "{version}":
+            if value == "{tag}":
                 value = tag
             build_cmd += ["--build-arg", f"{arg}={value}"]
 
