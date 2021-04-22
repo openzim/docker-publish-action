@@ -30,8 +30,8 @@ jobs:
           image-name: openzim/zimit
             DOCKERIO_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
             DOCKERIO_TOKEN=${{ secrets.DOCKERHUB_PASSWORD }}
-            GHCR_IO_USERNAME=${{ secrets.GHCR_USERNAME }}
-            GHCR_IO_TOKEN=${{ secrets.GHCR_TOKEN }}
+            GHCRIO_USERNAME=${{ secrets.GHCR_USERNAME }}
+            GHCRIO_TOKEN=${{ secrets.GHCR_TOKEN }}
           on-master: latest
 ```
 
@@ -65,12 +65,12 @@ jobs:
           image-name: openzim/zimit
           registries: |
             docker.io
-            gcr.io
+            ghcr.io
           credentials: |
             DOCKERIO_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
             DOCKERIO_TOKEN=${{ secrets.DOCKERHUB_PASSWORD }}
-            GCR_IO_USERNAME=${{ secrets.GOOGLE_USERNAME }}
-            GCR_IO_TOKEN=${{ secrets.GOOGLE_TOKEN }}
+            GCRIO_USERNAME=${{ secrets.GOOGLE_USERNAME }}
+            GCRIO_TOKEN=${{ secrets.GOOGLE_TOKEN }}
           context: sub-folder
           on-master: dev
           tag-pattern: /^v*([0-9.]+)$/
