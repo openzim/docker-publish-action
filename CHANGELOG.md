@@ -1,3 +1,11 @@
+# v7
+
+- now supports adding a `webhook` to call on successful push
+
+# v6
+
+- now supports schedule runs
+
 # v5
 
 - now supports a manual tag override through `manual-tag`.

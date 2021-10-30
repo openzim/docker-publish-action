@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build and push
-        uses: openzim/docker-publish-action@v6
+        uses: openzim/docker-publish-action@v7
         with:
           image-name: openzim/zimit
             DOCKERIO_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build and push
-        uses: openzim/docker-publish-action@v6
+        uses: openzim/docker-publish-action@v7
         with:
           image-name: openzim/zimit
           registries: |
@@ -79,6 +79,7 @@ jobs:
           build-args:
             VERSION={tag}
           manual-tag: ${{ github.event.inputs.version }}
+          webhook: https://api.sloppy.io/v1/apps/my-project/services/my-project/apps/my-app/deploy?user=${{ secrets.SLOPPY_USERNAME }}&auth=${{ secrets.SLOPPY_WEBHOOK_TOKEN }}
 ```
 
 **Note**: th top-part `on` is just a filter on running that workflow. You can omit it but it's safer to not run it on refs that you know won't trigger anything. See [documentation](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#on).
@@ -97,6 +98,7 @@ jobs:
 | `latest-on-tag` | **Whether to push to docker tag `:latest` on every matched tag** (see `tag-pattern`)<br />Also applies to `manual-tag`.<br />Value must be `true` or `false`. Defaults to `false`. |
 | `manual-tag` | **Manual tag override**<br />Replaces `on-master` and `tag-pattern` if not empty.<br />Also triggers `:latest` if `latest-on-tag` is `true`. |
 | `restrict-to` | **Don't push if action is run for a different repository**<br />Specify as `{owner}/{repository}`. |
+| `webhook` | **URL to POST to after image is pushed**<br />Will receive a JSON POST request somewhat similar to Docker Hub webhook payload. |
 
 
 

@@ -41,6 +41,7 @@ def main():
         "MANUAL_TAG",
         "RESTRICT_TO",
         "DOCKER_BUILDX_VERSION",
+        "WEBHOOK_URL",
     ]
 
     # fail early if missing this required info

@@ -48,6 +48,10 @@ inputs:
   restrict-to:
     description: repository path to limit this action to (ex. 'openzim/zimfarm') to prevent forks from triggering it.
     required: false
+  webhook:
+    description: URL to request (POST) to after a sucessful push to registry•ies
+    required: false
+    default: ''
 
 runs:
   using: composite
@@ -69,6 +73,7 @@ runs:
         MANUAL_TAG: ${{ inputs.manual-tag }}
         RESTRICT_TO: ${{ inputs.restrict-to }}
         DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        WEBHOOK_URL: ${{ inputs.webhook }}
         DOCKER_BUILDX_VERSION: 0.5.1
 
     - name: find tag
@@ -96,3 +101,8 @@ runs:
     - name: docker logout
       run: python3 $GITHUB_ACTION_PATH/docker_logout.py
       shell: bash
+
+    - name: run webhook
+      run: python3 $GITHUB_ACTION_PATH/run_webhook.py
+      shell: bash
+
