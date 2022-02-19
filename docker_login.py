@@ -30,7 +30,7 @@ def docker_login_from_env():
             universal_newlines=True,
         )
         if login.returncode != 0:
-            print(f"Unable to login to Docker Hub: {login.returncode}")
+            print(f"Unable to login to {registry}: {login.returncode}")
             sys.exit(login.returncode)
         print(f"Successfuly logged into {registry}!")
 
