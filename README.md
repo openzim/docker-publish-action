@@ -69,8 +69,8 @@ jobs:
           credentials: |
             DOCKERIO_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
             DOCKERIO_TOKEN=${{ secrets.DOCKERHUB_PASSWORD }}
-            GCRIO_USERNAME=${{ secrets.GOOGLE_USERNAME }}
-            GCRIO_TOKEN=${{ secrets.GOOGLE_TOKEN }}
+            GHCRIO_USERNAME=${{ secrets.GOOGLE_USERNAME }}
+            GHCRIO_TOKEN=${{ secrets.GOOGLE_TOKEN }}
           context: sub-folder
           on-master: dev
           tag-pattern: /^v*([0-9.]+)$/
