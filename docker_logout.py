@@ -11,7 +11,7 @@ def docker_logout_from_env():
         print(f"Logging out of {registry}…")
         logout = subprocess.run(["docker", "logout", registry])
         if logout.returncode != 0:
-            print(f"Unable to login to Docker Hub: {logout.returncode}")
+            print(f"Unable to login to {registry}: {logout.returncode}")
         print(f"Successfuly logged out of {registry}!")
 
 
