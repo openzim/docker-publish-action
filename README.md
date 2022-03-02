@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build and push
-        uses: openzim/docker-publish-action@v7
+        uses: openzim/docker-publish-action@v8
         with:
           image-name: openzim/zimit
             DOCKERIO_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build and push
-        uses: openzim/docker-publish-action@v7
+        uses: openzim/docker-publish-action@v8
         with:
           image-name: openzim/zimit
           registries: |
@@ -99,6 +99,8 @@ jobs:
 | `manual-tag` | **Manual tag override**<br />Replaces `on-master` and `tag-pattern` if not empty.<br />Also triggers `:latest` if `latest-on-tag` is `true`. |
 | `restrict-to` | **Don't push if action is run for a different repository**<br />Specify as `{owner}/{repository}`. |
 | `webhook` | **URL to POST to after image is pushed**<br />Will receive a JSON POST request somewhat similar to Docker Hub webhook payload. |
+| `repo_description` | **Text to set as repository description on docker.io's Hub (truncated to chars)**<br />If pushing to docker.io, will set this string as *repository description* on the Hub. Special value `auto` uses Github repository's description. |
+| `repo_overview` | **Text (markdown) to set as repository overview on docker.io's Hub (truncated to 25KB)**<br />If pushing to docker.io, will set this string as *repository overview* on the Hub. If starting with **`file:`**, will use the content of referenced file instead. Relative to `context`. Example: `file:../welcome.md`. Special value **`auto`** will look for a `README[.md|rst]` file in context (and parents). |
 
 
 
