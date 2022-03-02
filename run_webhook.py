@@ -37,12 +37,17 @@ def run_webhook():
     # concurrent requests.
     # ex: 2 close-apart requests for different apps in same sloppy project raises 409
     attempts = 0
-    while attempts < 4:
+    max_attempts = 3
+    while attempts < max_attempts + 1:
         attempts += 1
         try:
             return do_run_webhook(payload)
         except urllib.error.HTTPError as exc:
-            print("Unexpected {}. {} attempts remaining".format(exc, attempts))
+            print(
+                "Unexpected Error on Attempt {}/{}: {}. ".format(
+                    attempts, max_attempts, exc
+                )
+            )
             time.sleep(attempts * 30)
             continue
     print("Exhausted retry attempts")

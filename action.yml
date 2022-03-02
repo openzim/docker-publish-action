@@ -52,6 +52,12 @@ inputs:
     description: URL to request (POST) to after a sucessful push to registry•ies
     required: false
     default: ''
+  repo_description:
+    description: Text to set as repository description on docker.io (100 chars max)
+    required: false
+  repo_overview:
+    description: Text (markdown) to set as repository overview on docker.io (2.5MB max)
+    required: false
 
 runs:
   using: composite
@@ -74,6 +80,8 @@ runs:
         RESTRICT_TO: ${{ inputs.restrict-to }}
         DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         WEBHOOK_URL: ${{ inputs.webhook }}
+        REPO_DESCRIPTION: ${{ inputs.repo_description }}
+        REPO_FULL_DESCRIPTION: ${{ inputs.repo_overview }}
         DOCKER_BUILDX_VERSION: 0.5.1
 
     - name: find tag
@@ -100,6 +108,13 @@ runs:
 
     - name: docker logout
       run: python3 $GITHUB_ACTION_PATH/docker_logout.py
+      shell: bash
+
+    - name: update docker.io's Hub descriptions
+      run: python3 $GITHUB_ACTION_PATH/update_dockerio_descriptions.py
+      env:
+        CREDENTIALS: ${{ inputs.credentials }}
+      if: ${{ env.SHOULD_UPDATE_DOCKERIO }}
       shell: bash
 
     - name: run webhook

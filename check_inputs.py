@@ -42,6 +42,9 @@ def main():
         "RESTRICT_TO",
         "DOCKER_BUILDX_VERSION",
         "WEBHOOK_URL",
+        "REPO_DESCRIPTION",
+        "REPO_FULL_DESCRIPTION",
+        "SHOULD_UPDATE_DOCKERIO",
     ]
 
     # fail early if missing this required info
@@ -54,6 +57,11 @@ def main():
     if getenv("RESTRICT_TO") and getenv("GITHUB_REPOSITORY") != getenv("RESTRICT_TO"):
         print("not triggered on restricted-to repo, skipping.", getenv("RESTRICT_TO"))
         return 1
+
+    if "docker.io" in getenv("REGISTRIES", "").split() and (
+        getenv("REPO_DESCRIPTION") or getenv("REPO_FULL_DESCRIPTION")
+    ):
+        os.environ["SHOULD_UPDATE_DOCKERIO"] = "1"
 
     with open(getenv("GITHUB_ENV"), "a") as fh:
         for env in required_inputs + optional_inputs:

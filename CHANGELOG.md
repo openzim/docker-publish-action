@@ -1,3 +1,7 @@
+# v8
+
+- now supports setting description and overview on docker.io's Hub
+
 # v7
 
 - now supports adding a `webhook` to call on successful push
