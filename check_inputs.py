@@ -15,7 +15,11 @@ def get_main_branch(repository):
 def getenv(name, default=None):
     """default branch is only available on repo-related trigger events (not schedule)"""
     if name == "DEFAULT_BRANCH":
-        return os.getenv(name, get_main_branch(os.getenv("GITHUB_REPOSITORY")))
+        return (
+            os.getenv(name)
+            or get_main_branch(os.getenv("GITHUB_REPOSITORY"))
+            or default
+        )
     return os.getenv(name, default)
 
 

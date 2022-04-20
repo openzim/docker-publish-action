@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build and push
-        uses: openzim/docker-publish-action@v8
+        uses: openzim/docker-publish-action@v9
         with:
           image-name: openzim/zimit
             DOCKERIO_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build and push
-        uses: openzim/docker-publish-action@v8
+        uses: openzim/docker-publish-action@v9
         with:
           image-name: openzim/zimit
           registries: |

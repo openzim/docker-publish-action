@@ -1,3 +1,7 @@
+# v9
+
+- Fixed schedule runs with new Actions behavior
+
 # v8
 
 - now supports setting description and overview on docker.io's Hub
