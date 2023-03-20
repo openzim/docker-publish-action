@@ -12,7 +12,7 @@ inputs:
   registries:
     description: list of registries to push to (defaults to docker.io ghcr.io)
     required: false
-    default: docker.io ghcr.io
+    default: ghcr.io
   credentials:
     description: list of credentials for each registry. Ex. DOCKERIO_USERNAME=xxx DOCKERIO_TOKEN=yyy GHCRIO_USERNAME=xxx
     required: true

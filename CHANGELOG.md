@@ -1,3 +1,7 @@
+# v10
+
+- Defaults to ghcr.io only (removed docker.io from default)
+
 # v9
 
 - Fixed schedule runs with new Actions behavior

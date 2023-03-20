@@ -28,8 +28,6 @@ jobs:
         uses: openzim/docker-publish-action@v9
         with:
           image-name: openzim/zimit
-            DOCKERIO_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-            DOCKERIO_TOKEN=${{ secrets.DOCKERHUB_PASSWORD }}
             GHCRIO_USERNAME=${{ secrets.GHCR_USERNAME }}
             GHCRIO_TOKEN=${{ secrets.GHCR_TOKEN }}
           on-master: latest
@@ -87,7 +85,7 @@ jobs:
 | Input | Usage |
 | :--- | :--- |
 | `image-name`<font color=red>\*</font> | **Name of your image on the registry** (without the version part).<br />Ex.: `openzim/zimit` would refer to [this image](https://hub.docker.com/r/openzim/zimit).<br />The same name is pushed to **all registries**. |
-| `registries` | **List of registries to push images to** (domain name only).<br />Ex.: `docker.io` for Docker Hub, `ghcr.io`, `gcr.io`, etc.<br />Defaults to `docker.io ghcr.io`. |
+| `registries` | **List of registries to push images to** (domain name only).<br />Ex.: `docker.io` for Docker Hub, `ghcr.io`, `gcr.io`, etc.<br />Defaults to `ghcr.io`. |
 | `credentials`<font color=red>\*</font> | **List of credentials for all registries**<br />Use the `REGISTRY_USERNAME=xxx` and `REGISTRY_TOKEN=xxx` formats to specify.<br />`REGISTRY` refers to the uppercase registry domain name without `.`.<br />Ex: `GHCRIO_USERNAME=xxx` for `ghcr.io`.<br />_Notes_: Github token is a [PAT](https://github.com/settings/tokens) with `repo, workflow, write:packages` permissions.<br />Docker hub token is account password.|
 | `context` | **Path in the repository to use as build context**<br />Relative to repository root.  Ex: `dnscache` or `workers/slave`.<br />Defaults to `.`. |
 | `dockerfile` | **Path to the Dockerfile recipe, relative to context**<br />Use `../` syntax if dockerfile is outside context.<br />Defaults to `Dockerfile`. |
