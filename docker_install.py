@@ -8,7 +8,6 @@ import subprocess
 
 
 def check_installed_version():
-
     version = subprocess.run(
         ["docker", "buildx", "version"],
         stdout=subprocess.PIPE,

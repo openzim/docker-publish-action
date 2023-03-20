@@ -8,7 +8,6 @@ import re
 
 
 def find_tag_from_env():
-
     docker_tag_for_master = os.getenv("ON_MASTER")
     manual_tag = os.getenv("MANUAL_TAG", "")
     version_tag, latest = "", False

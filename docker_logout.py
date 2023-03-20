@@ -6,7 +6,6 @@ import subprocess
 
 
 def docker_logout_from_env():
-
     for registry in os.getenv("REGISTRIES", "").split():
         print(f"Logging out of {registry}…")
         logout = subprocess.run(["docker", "logout", registry])

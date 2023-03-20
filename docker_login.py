@@ -6,7 +6,6 @@ import subprocess
 
 
 def docker_login_from_env():
-
     credentials = dict(
         [
             [x.strip() for x in item.split("=")] if "=" in item else (item.strip(), "")
