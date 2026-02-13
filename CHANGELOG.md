@@ -1,6 +1,7 @@
 # v10
 
 - Defaults to ghcr.io only (removed docker.io from default)
+- Using buildx v0.31.1  # 2026-02-13
 
 # v9
 

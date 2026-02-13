@@ -24,7 +24,7 @@ def check_installed_version():
 
 
 def install_docker():
-    req_version = os.getenv("DOCKER_BUILDX_VERSION", "0.5.1")
+    req_version = os.getenv("DOCKER_BUILDX_VERSION", "0.31.1")
     inst_version = check_installed_version()
 
     if inst_version == req_version:
