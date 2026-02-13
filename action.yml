@@ -82,7 +82,7 @@ runs:
         WEBHOOK_URL: ${{ inputs.webhook }}
         REPO_DESCRIPTION: ${{ inputs.repo_description }}
         REPO_FULL_DESCRIPTION: ${{ inputs.repo_overview }}
-        DOCKER_BUILDX_VERSION: 0.5.1
+        DOCKER_BUILDX_VERSION: 0.31.1
 
     - name: find tag
       run: python3 $GITHUB_ACTION_PATH/find_tag.py
